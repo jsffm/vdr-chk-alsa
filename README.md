@@ -7,7 +7,6 @@ asound.conf.hdmi0
 pcm.!default {
         type hw
         card 1
-        #device 7
         device 3
 }
 
@@ -25,7 +24,6 @@ pcm.!default {
         type hw
         card 1
         device 7
-        #device 3
 }
 
 ctl.!default {
