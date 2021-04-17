@@ -8,7 +8,7 @@ mail=jsffm@jsffm.lan
 eld=/proc/asound/NVidia/eld#0
 
 check() {
-for (( i=0 ; i<5 ; i++ ))
+for (( i=0 ; i<10 ; i++ ))
 do
     [ ! -e $eld.$i ] && break
     r=$(grep eld_valid $eld.$i)
@@ -16,6 +16,7 @@ do
     if [ "$v" == "1" ]
     then
 	ok=$i
+	break
     fi
 done
 if [ "$ok" == "" ]
