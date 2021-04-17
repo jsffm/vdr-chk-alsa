@@ -1,13 +1,17 @@
 #!/bin/sh
 
-# asound.conf.hdmi0 etc anlegen
+#Link asound.conf auf asound.conf.hdmi0 etc anlegen
 
 #set -x
+
+mail=jsffm@jsffm.lan
+eld=/proc/asound/NVidia/eld#0
 
 check() {
 for (( i=0 ; i<5 ; i++ ))
 do
-    r=$(grep eld_valid /proc/asound/NVidia/eld#0.$i)
+    [ ! -e $eld.$i ] && break
+    r=$(grep eld_valid $eld.$i)
     v=$(echo $r | cut -d \  -f 2)
     if [ "$v" == "1" ]
     then
@@ -17,17 +21,18 @@ done
 if [ "$ok" == "" ]
 then
     echo "Alsa not OK"
-    [ "$1" == "2" ] && echo "Alsa not OK" | mail -s "vdr3 Alsa not OK" jsffm@jsffm.lan
+    [ "$1" == "2" ] && echo "Alsa not OK" | mail -s "vdr3 Alsa not OK" $mail
 else
     echo "Alsa OK $ok"
     #cat /proc/asound/NVidia/eld#0.$ok
     if [ $ok -ne 1 ]
     then
-	cat /proc/asound/NVidia/eld#0.$ok | mail -s "vdr3 Alsa $ok" jsffm@jsffm.lan
+	cat $eld.$ok | mail -s "vdr3 Alsa $ok" $mail
     fi
     #set -x
     cd /etc
     rm asound.conf
+    [ ! -e asound.conf.hdmi$ok ] && cp -p asound.conf.hdmi1 asound.conf.hdmi$ok
     ln -s asound.conf.hdmi$ok asound.conf
 fi
 }
